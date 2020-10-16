@@ -59,6 +59,21 @@ impl DefaultInstructionParser {
         );
 
         this.add_instruction(
+            0x03,
+            "SUB",
+            vec![ArgType::Register, ArgType::Register],
+            Box::new(|cpu, args| {
+                match (args[0], args[1]) {
+                    (Arg::Register(dest), Arg::Register(src)) => {
+                        let value = cpu.read_register(dest) - cpu.read_register(src);
+                        vec![CPUMutation::WriteRegister(dest, value)]
+                    },
+                    _ => panic!("There's a bug in the argument parsing")
+                }
+            })
+        );
+
+        this.add_instruction(
             0xff,
             "HLT",
             vec![],
